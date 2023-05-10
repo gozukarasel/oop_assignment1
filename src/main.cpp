@@ -13,37 +13,20 @@
 
 #include "pokemon.h"
 
-using namespace std;
-
-//-------------Do Not Change These Global Variables-------------//
-int NAME_COUNTER = 0;   //Use this to keep track of the enemy names
-int POK_COUNTER = 0;    //Use this to keep track of the pokemon names
-int PLAYER_POKEMON_ATTACK = 20; //You don't have to use this variable but its here if you need it
-int ENEMY_POKEMON_ATTACK = 10;  //You don't have to use this variable but its here if you need it
-//--------------------------------------------------------------//
-
-//---If Necessary Add Your Global Variables Here---// 
-// 
-//
-//
-//-------------------------------------------------//
 
 //-------------Do Not Change These Function Definitions-------------//
 string* readEnemyNames(const char*);
 string* readPokemonNames(const char*);
-player characterCreate(string, int);
+player characterCreate(string,int);
 void mainMenu();
 void fightEnemy(player*, string*, string*);
-void catchPokemon(player*, string*);
+void fightMenu();
+//void catchPokemon(player*, string*);
 //------------------------------------------------------------------//
 
-//---If Necessary Add Your Function Definitions Here---// 
-//
-//
-//
-//-----------------------------------------------------//
 
-//-------------Do Not Change This Function-------------//
+
+
 int main(int argc, char* argv[]){
 	system("clear");
 
@@ -75,7 +58,7 @@ int main(int argc, char* argv[]){
             fightEnemy(&newPlayer, enemyNames, pokemonNames);
             break;
         case 2:
-            catchPokemon(&newPlayer, pokemonNames);
+            //catchPokemon(&newPlayer, pokemonNames);
             break;
         case 3:
             cout<<newPlayer.showPokemonNumber()<<endl;
@@ -97,43 +80,87 @@ int main(int argc, char* argv[]){
             delete[] pokemonNames;
             return EXIT_SUCCESS;
             break;
-  
         default:
             cout << "Please enter a valid number!!!" << endl;
             break;
         }
     }
-    return EXIT_FAILURE;
+    return EXIT_FAILURE; 
 };
 //-----------------------------------------------------//
 
 //-------------Code This Function-------------//
-string* readEnemyNames(const char* argv){
-    //---Code Here---//
-    // 
-    //
-    //
-    //---------------//   
+string* readEnemyNames(const char* argv) // pushlarken bunu değiştirmeyi unutma 
+{
+    ifstream inFile;
+    inFile.open("enemyNames.txt");
+
+    string firstLine;    
+    getline(inFile,firstLine);
+    int intdata = stoi (firstLine);
+
+    string* enemyNames = new string[intdata];
+    
+    string name;
+    int counter=0;
+
+
+    while (getline(inFile, name)) {
+        enemyNames[counter] = name;
+        counter++;
+    }
+    return enemyNames;
 };
 //-----------------------------------------------------//
 
 //-------------Code This Function-------------//
-string* readPokemonNames(const char* argv){
-    //---Code Here---//
-    // 
-    //
-    //
-    //---------------//
+string* readPokemonNames(const char* argv)
+{
+    ifstream fileName;
+    fileName.open("pokemonNames.txt");
+
+    string firstLine;    
+    getline(fileName,firstLine);
+    int intdata = stoi (firstLine);
+
+    string* pokemonNames = new string[intdata];
+    
+    string name;
+    int counter =0;
+    
+
+    while (getline(fileName, name)) {
+        pokemonNames[counter] = name;
+        counter++;
+    }
+    return pokemonNames;
 };
 //-----------------------------------------------------//
 
 //-------------Code This Function-------------//
-player characterCreate(string playerName, int pokemonChoice){
-    //---Code Here---//
-    // 
-    //
-    //
-    //---------------//
+player characterCreate(string playerName, int pokemonChoice)
+{    
+    if(pokemonChoice == 1)
+    {
+        pokemon p("Bulbasaur",PLAYER_POKEMON_ATTACK);
+        pokemon Bulbasaur(p);
+        player player(playerName,Bulbasaur);
+        return player;
+    }
+    if (pokemonChoice == 2)
+    {
+        pokemon p("Charmender",PLAYER_POKEMON_ATTACK);
+        pokemon Charmender(p);
+        player player(playerName,Charmender);
+        return player;
+    }
+    if (pokemonChoice == 3)
+    {
+        pokemon p("Squirtle",PLAYER_POKEMON_ATTACK);
+        pokemon Squirtle(p);
+        player player(playerName,Squirtle);
+        return player;
+    }
 };
 //--------------------------------------------//
 
@@ -151,15 +178,45 @@ void mainMenu(){
     cout << endl;
     cout << "Choice: ";
 };
+void fightMenu()
+{
+    cout << endl;
+    cout << "1-Fight"<<endl;
+    cout << "2-Runaway"<<endl;
+};
 //-----------------------------------------------------//
 
 //-------------Code This Function-------------//
-void fightEnemy(player* newPlayer, string* enemyNames, string* pokemonNames){
-    //---Code Here---//
-    // 
-    //
-    //
-    //---------------//
+void fightEnemy(player* newPlayer, string* enemyNames, string* pokemonNames)
+{
+    pokemon enemyPokemon(pokemonNames[0],ENEMY_POKEMON_ATTACK);
+    enemy newEnemy(enemyNames[0],enemyPokemon);
+
+    int fightChoice;
+
+    cout<< "You encounter with " << newEnemy.get_enemy_name() << "and his/hers pokemon"<< newEnemy.get_enemy_pokemon().get_name()<<endl;
+    cout<< newEnemy.get_enemy_pokemon().get_name()<< " Health: "<< newEnemy.get_enemy_pokemon().get_hpValue() << " Attack: " << newEnemy.get_enemy_pokemon().get_atkValue();
+
+    while(newPlayer->get_pokemon().get_hpValue() != 0 || newEnemy.get_enemy_pokemon().get_hpValue() != 0)
+    {
+        fightMenu();
+        cin>>fightChoice;
+        cout << "Choice: " << fightChoice << endl;
+        switch (fightChoice)
+        {
+        case 1:
+            cout << "Your Pokemons health: " << newPlayer->get_pokemon().get_hpValue() - newEnemy.get_enemy_pokemon().get_atkValue() <<endl;
+            cout << newEnemy.get_enemy_name() << "Pokemons health: " << newEnemy.get_enemy_pokemon().get_hpValue() - newPlayer->get_pokemon().get_atkValue() <<endl;
+            break;
+        
+        case 2:
+            break;
+
+        default:
+            cout <<"Please enter a valid number!" << endl;
+            break;
+        }
+    }
 };
 //--------------------------------------------//
 
