@@ -55,22 +55,33 @@ class pokedex
         pokemon pokedexArray[100];
         int position;
     public:
-        pokedex() {this->position = 0;};
+        pokedex() 
+        {
+            this->position = 0;
+        };
         void updatePokedex(pokemon newPokemon)
         {
             pokedexArray[position++] = newPokemon;
         }
         void printPokedex()
         {
-            int size = sizeof(pokedexArray)/sizeof(pokedexArray[0]);
 
-            cout<< "---------------Pokedex---------------"<<endl;
-
-            for(int i = 0; i<size;i++)
+            for(int i = 0; i<position;i++)
             {
                 cout<<pokedexArray[i].get_name()<<endl;
             }
-        }     
+        };
+        bool checkPokedex(pokemon neWpokemon)
+        {
+            for(int i = 0; i<position; i++)
+            {
+                if(neWpokemon.get_name() == pokedexArray[i].get_name())
+                {
+                    return true;
+                }
+            }
+            return false;
+        };
 };
 
 class player
@@ -86,40 +97,48 @@ class player
     public:
         player()
         {
-            this->name = name;
-            this->pokemonNumber = pokemonNumber;
-            this->pokeballNumber = pokeballNumber;
-            this->badgeNumber = badgeNumber;
+            this-> name = name;
+            this-> pokemonNumber = pokemonNumber;
+            this-> pokeballNumber = pokeballNumber;
+            this-> badgeNumber = badgeNumber;
         };
         player(string playername, pokemon playerPokemon)
         {
-            this->pokemonNumber = 0;
-            this->badgeNumber = 0;
-            this->pokeballNumber = 10;
+            this-> pokemonNumber = 0;
+            this-> badgeNumber = 0;
+            this-> pokeballNumber = 10;
             this-> name = playername;
             this-> playerPokemon = playerPokemon;
         };
         int showPokeballNumber()
         {
-            return this->pokeballNumber;
+            return this-> pokeballNumber;
         };
         int showPokemonNumber()
         {
-            return this->pokemonNumber;
+            return this-> pokemonNumber;
         };
+        void set_pokeball_number(int count)
+        {
+            this-> pokeballNumber = pokeballNumber + count;
+        }
         int showBadgeNumber()
         {
-            return this->badgeNumber;
+            return this-> badgeNumber;
+        };
+        void set_badge_number(int count)
+        {
+            this->badgeNumber = badgeNumber + count;
         };
         pokemon get_pokemon()
         {
-            return this->playerPokemon;
-        }
-        void battleWon()
-        {
-
-        }
+            return this-> playerPokemon;
+        };
         pokedex playerPokedex;
+        void set_pokemon_number(int count)
+        {
+            this->pokemonNumber += count;
+        }
 };
 
 class enemy

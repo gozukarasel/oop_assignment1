@@ -114,94 +114,24 @@ string* readEnemyNames(const char* argv) // pushlarken bunu değiştirmeyi unutm
 //-----------------------------------------------------//
 
 //-------------Code This Function-------------//
-string* readPokemonNames(const char* argv)
-{
-    ifstream fileName;
-    fileName.open("pokemonNames.txt");
-
-    string firstLine;    
-    getline(fileName,firstLine);
-    int intdata = stoi (firstLine);
-
-    string* pokemonNames = new string[intdata];
-    
-    string name;
-    int counter =0;
-    
-
-    while (getline(fileName, name)) {
-        pokemonNames[counter] = name;
-        counter++;
-    }
-    return pokemonNames;
-};
-//-----------------------------------------------------//
-
-//-------------Code This Function-------------//
-player characterCreate(string playerName, int pokemonChoice)
-{    
-    if(pokemonChoice == 1)
-    {
-        pokemon p("Bulbasaur",PLAYER_POKEMON_ATTACK);
-        pokemon Bulbasaur(p);
-        player player(playerName,Bulbasaur);
-        return player;
-    }
-    if (pokemonChoice == 2)
-    {
-        pokemon p("Charmender",PLAYER_POKEMON_ATTACK);
-        pokemon Charmender(p);
-        player player(playerName,Charmender);
-        return player;
-    }
-    if (pokemonChoice == 3)
-    {
-        pokemon p("Squirtle",PLAYER_POKEMON_ATTACK);
-        pokemon Squirtle(p);
-        player player(playerName,Squirtle);
-        return player;
-    }
-};
-//--------------------------------------------//
-
-//-------------Do Not Change This Function-------------//
-void mainMenu(){
-    cout << endl;
-    cout << "-------- Menu --------" << endl;
-    cout << "1. Fight for a badge" << endl;
-    cout << "2. Catch a Pokemon" << endl;
-    cout << "3. Number of Pokemons" << endl;
-    cout << "4. Number of Pokeballs " << endl;
-    cout << "5. Number of Badges" << endl;
-    cout << "6. Pokedex" << endl;
-    cout << "7. Exit" << endl;
-    cout << endl;
-    cout << "Choice: ";
-};
-void fightMenu()
-{
-    cout << endl;
-    cout << "1-Fight"<<endl;
-    cout << "2-Runaway"<<endl;
-};
-//-----------------------------------------------------//
-
-//-------------Code This Function-------------//
 void fightEnemy(player* newPlayer, string* enemyNames, string* pokemonNames)
-{   
-    pokemon enemyPokemon(pokemonNames[0],ENEMY_POKEMON_ATTACK);
-    enemy* newEnemy = new enemy(enemyNames[0],enemyPokemon);
+{
+
+    pokemon enemyPokemon(pokemonNames[POK_COUNTER],ENEMY_POKEMON_ATTACK);
+    POK_COUNTER++;
+    enemy newEnemy(enemyNames[NAME_COUNTER],enemyPokemon);
+    NAME_COUNTER++;
 
     int player_pokemon_fight_health = newPlayer->get_pokemon().get_hpValue();
     int player_pokemon_attack_value = newPlayer->get_pokemon().get_atkValue();
 
-    int enemy_pokemon_fight_health = newEnemy->get_enemy_pokemon().get_hpValue();
-    int enemy_pokemon_fight_attack_value = newEnemy->get_enemy_pokemon().get_atkValue();
+    int enemy_pokemon_fight_health = newEnemy.get_enemy_pokemon().get_hpValue();
+    int enemy_pokemon_fight_attack_value = newEnemy.get_enemy_pokemon().get_atkValue();
 
     int fightChoice;
 
-    cout<< "You encounter with " << newEnemy->get_enemy_name() << " and his/hers pokemon "<< newEnemy->get_enemy_pokemon().get_name() <<endl;
-    cout<< newEnemy->get_enemy_pokemon().get_name() << " Health: "<< newEnemy->get_enemy_pokemon().get_hpValue() << " Attack: " << newEnemy->get_enemy_pokemon().get_atkValue() <<endl;
+    cout<< "You encounter with " << newEnemy.get_enemy_name() << " and his/hers pokemon "<< newEnemy.get_enemy_pokemon().get_name() <<endl;
+    cout<< newEnemy.get_enemy_pokemon().get_name() << " Health: "<< newEnemy.get_enemy_pokemon().get_hpValue() << " Attack: " << newEnemy.get_enemy_pokemon().get_atkValue() <<endl;
 
     cout<<endl;
 
@@ -222,22 +152,18 @@ void fightEnemy(player* newPlayer, string* enemyNames, string* pokemonNames)
                 enemy_pokemon_fight_health = enemy_pokemon_fight_health - player_pokemon_attack_value;
 
                 cout << "Your Pokemons health: " << player_pokemon_fight_health << endl;
-                cout << newEnemy->get_enemy_name() << " Pokemons health:" << enemy_pokemon_fight_health << endl;
+                cout << newEnemy.get_enemy_name() << " Pokemons health:" << enemy_pokemon_fight_health << endl;
 
-                if(enemy_pokemon_fight_health<=0)
+                if(enemy_pokemon_fight_health <= 0)
                 {
                     cout << "You Won!"<< endl;
                     newPlayer->set_badge_number(1);
+                    newPlayer->set_pokeball_number(1);
                     
                     if(!newPlayer->playerPokedex.checkPokedex(enemyPokemon))
                     {
                         newPlayer->playerPokedex.updatePokedex(enemyPokemon);
                     }
-                    delete newEnemy;
-                }
-                if(player_pokemon_fight_health <= 0)
-                {
-                    delete newPlayer;
                 }
                 break;
             case 2:
@@ -250,11 +176,35 @@ void fightEnemy(player* newPlayer, string* enemyNames, string* pokemonNames)
 //--------------------------------------------//
 
 //-------------Code This Function-------------//
-void catchPokemon(player* newPlayer, string* pokemonNames){
-    //---Code Here---//
-    // 
-    //
-    //
-    //---------------//
+void catchPokemon(player* newPlayer, string* pokemonNames)
+{
+    pokemon encounterPokemon(pokemonNames[POK_COUNTER],ENEMY_POKEMON_ATTACK);
+    POK_COUNTER++;
+
+    cout << "You encounter with " << encounterPokemon.get_name() << "Health: " << encounterPokemon.get_hpValue() << "Attack: " << encounterPokemon.get_atkValue();
+    
+    int catchChoice;
+    
+    catchMenu();
+
+    cin>>catchChoice;
+
+    cout << "Choice: " << catchChoice << endl;
+
+    switch (catchChoice)
+    {
+    case 1:
+        newPlayer->set_pokeball_number(1);
+        newPlayer->set_pokemon_number(1);
+        if (!newPlayer->playerPokedex.checkPokedex(encounterPokemon))
+        {
+            newPlayer->playerPokedex.updatePokedex(encounterPokemon);
+        }
+        break;
+    case 2:
+        break;
+    default:
+        break;
+    }
 };
 //--------------------------------------------//

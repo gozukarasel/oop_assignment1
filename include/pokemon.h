@@ -25,24 +25,9 @@ class pokemon
         int hpValue;
         int atkValue;
     public:
-        pokemon()
-        {
-            this->name=name;
-            this->hpValue=hpValue;
-            this->atkValue=atkValue;
-        };
-        pokemon(string neWname,int neWatkValue)
-        {
-            this->name = neWname;
-            this-> atkValue= neWatkValue;
-            this->hpValue =100;
-        };
-        pokemon(const pokemon &t)
-        {
-            this->name = t.name;
-            this->atkValue = t.atkValue;
-            this->hpValue = t.hpValue;
-        };
+        pokemon();
+        pokemon(string neWname,int neWatkValue);
+        pokemon(const pokemon &t);
         string get_name(){return this->name;};
         int get_hpValue(){return this->hpValue;};
         int get_atkValue(){return this->atkValue;};
