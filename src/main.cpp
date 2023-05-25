@@ -24,8 +24,8 @@ void fightMenu();
 //void catchPokemon(player*, string*);
 //------------------------------------------------------------------//
 
-
-
+const char* enemyNamestxt = "enemyNames.txt";
+const char* pokemonNamestxt ="pokemonNames.txt";
 
 int main(int argc, char* argv[]){
 	system("clear");
@@ -188,35 +188,64 @@ void fightMenu()
 
 //-------------Code This Function-------------//
 void fightEnemy(player* newPlayer, string* enemyNames, string* pokemonNames)
-{
+{   
     pokemon enemyPokemon(pokemonNames[0],ENEMY_POKEMON_ATTACK);
-    enemy newEnemy(enemyNames[0],enemyPokemon);
+    enemy* newEnemy = new enemy(enemyNames[0],enemyPokemon);
+
+    int player_pokemon_fight_health = newPlayer->get_pokemon().get_hpValue();
+    int player_pokemon_attack_value = newPlayer->get_pokemon().get_atkValue();
+
+    int enemy_pokemon_fight_health = newEnemy->get_enemy_pokemon().get_hpValue();
+    int enemy_pokemon_fight_attack_value = newEnemy->get_enemy_pokemon().get_atkValue();
 
     int fightChoice;
 
-    cout<< "You encounter with " << newEnemy.get_enemy_name() << "and his/hers pokemon"<< newEnemy.get_enemy_pokemon().get_name()<<endl;
-    cout<< newEnemy.get_enemy_pokemon().get_name()<< " Health: "<< newEnemy.get_enemy_pokemon().get_hpValue() << " Attack: " << newEnemy.get_enemy_pokemon().get_atkValue();
+    cout<< "You encounter with " << newEnemy->get_enemy_name() << " and his/hers pokemon "<< newEnemy->get_enemy_pokemon().get_name() <<endl;
+    cout<< newEnemy->get_enemy_pokemon().get_name() << " Health: "<< newEnemy->get_enemy_pokemon().get_hpValue() << " Attack: " << newEnemy->get_enemy_pokemon().get_atkValue() <<endl;
 
-    while(newPlayer->get_pokemon().get_hpValue() != 0 || newEnemy.get_enemy_pokemon().get_hpValue() != 0)
+    cout<<endl;
+
+    
+    while(player_pokemon_fight_health > 0 && enemy_pokemon_fight_health > 0)
     {
         fightMenu();
         cin>>fightChoice;
-        cout << "Choice: " << fightChoice << endl;
-        switch (fightChoice)
-        {
-        case 1:
-            cout << "Your Pokemons health: " << newPlayer->get_pokemon().get_hpValue() - newEnemy.get_enemy_pokemon().get_atkValue() <<endl;
-            cout << newEnemy.get_enemy_name() << "Pokemons health: " << newEnemy.get_enemy_pokemon().get_hpValue() - newPlayer->get_pokemon().get_atkValue() <<endl;
-            break;
         
-        case 2:
-            break;
+        cout<<endl;
+        
+        cout << "Choice: " << fightChoice << endl;
 
-        default:
-            cout <<"Please enter a valid number!" << endl;
-            break;
+        switch(fightChoice)
+        {
+            case 1:
+                player_pokemon_fight_health = player_pokemon_fight_health - enemy_pokemon_fight_attack_value;
+                enemy_pokemon_fight_health = enemy_pokemon_fight_health - player_pokemon_attack_value;
+
+                cout << "Your Pokemons health: " << player_pokemon_fight_health << endl;
+                cout << newEnemy->get_enemy_name() << " Pokemons health:" << enemy_pokemon_fight_health << endl;
+
+                if(enemy_pokemon_fight_health<=0)
+                {
+                    cout << "You Won!"<< endl;
+                    newPlayer->set_badge_number(1);
+                    
+                    if(!newPlayer->playerPokedex.checkPokedex(enemyPokemon))
+                    {
+                        newPlayer->playerPokedex.updatePokedex(enemyPokemon);
+                    }
+                    delete newEnemy;
+                }
+                if(player_pokemon_fight_health <= 0)
+                {
+                    delete newPlayer;
+                }
+                break;
+            case 2:
+                break;
+            default:
+                break;
         }
-    }
+    }   
 };
 //--------------------------------------------//
 
